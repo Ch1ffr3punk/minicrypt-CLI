@@ -1,0 +1,46 @@
+Usage: minicrypt [flags] <command> [args]
+Commands:
+  g [output_directory]    Generate keys (default: current directory)
+  i <name> <file>         Import public key (imports 'file' as '<name>.pem' into current directory)
+  e [recipient_name_or_pubkey_path] Encrypt
+  d [private_key_path]    Decrypt
+  s [private_key_path]    Sign
+  v                       Verify
+  spe <recipient_name>    Sign+Pad+Encrypt (uses private.pem and <recipient_name>.pem in current directory)
+  duv                     Decrypt+Unpad+Verify (uses private.pem in current directory)
+
+Flags:
+  -p <size>               Set padding size (default: 4096)
+
+Examples:
+  # Generate keys in the current directory:
+  minicrypt g
+
+  # Generate keys in a specific directory:
+  minicrypt g ./my_keys
+
+  # Import Alice's public key and save it as 'alice.pem':
+  minicrypt i alice /path/to/alice_public.pem
+
+  # Encrypt to 'alice' (looks for 'alice.pem' in current directory):
+  minicrypt e alice < msg.txt > enc.txt
+
+  # Encrypt using a specific public key file (path as argument):
+  minicrypt e ./path/to/bob_public.pem < msg.txt > enc.txt
+
+  # Decrypt (looks for 'private.pem' in current directory):
+  minicrypt d < enc.txt
+
+  # Decrypt using a specific private key file (path as argument):
+  minicrypt d ./path/to/my_custom_private_key.pem < enc.txt
+
+  # Sign a message (looks for 'private.pem' in current directory):
+  minicrypt s < message.txt > signed.txt
+
+  # Sign a message using a specific private key file (path as argument):
+  minicrypt s ./path/to/my_signing_key.pem < message.txt > signed.txt
+
+  # Combined operations
+  minicrypt spe alice < msg.txt > enc.txt
+  minicrypt duv < enc.txt
+  minicrypt -p 2048 spe bob < msg.txt > enc.txt
